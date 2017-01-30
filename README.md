@@ -1,2 +1,2 @@
 # Automatic-Course-Selection
-BJTU
+@Beijing Jiaotong University
