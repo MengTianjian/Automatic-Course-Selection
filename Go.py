@@ -56,13 +56,13 @@ def division(img):
 def recognize(img):
     fontMods = {}
     for i in range(10):
-        fontMods[str(i)] = Image.open("./font2/%d.gif"%i)
+        fontMods[str(i)] = Image.open("./font/%d.gif"%i)
     Upper = ['A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q','R','S','T','U','V','W','X','Y','Z']
     Lower = ['a','b','d','e','f','g','h','j','n','q','r','t','w','x','y']
     for i in Upper:
-        fontMods[i] = Image.open("./font2/%s.gif"%i)
+        fontMods[i] = Image.open("./font/%s.gif"%i)
     for i in Lower:
-        fontMods[i] = Image.open("./font2/%s1.gif"%i)
+        fontMods[i] = Image.open("./font/%s1.gif"%i)
         result = ""
     font = division(img)
     for i in font:
@@ -86,7 +86,8 @@ def recognize(img):
 
 if __name__ == '__main__':
     print '//  Created by Tianjian Meng on 6/7/16.'
-    print '//  Copyright @ 2016 BJTU. All rights reserved.'
+    print '//  Updated by Tianjian Meng on 1/30/17.'
+    print '//  Copyright @ 2017 Pitt. All rights reserved.'
     zjh=raw_input('Please Input Student ID:')
     mm=raw_input('Please Input Password:')
     cookie_support=urllib2.HTTPCookieProcessor(cookielib.CookieJar())
