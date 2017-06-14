@@ -85,20 +85,13 @@ def recognize(img):
         result += points[0][1]
     return result
 
-if __name__ == '__main__':
-    print '//  Created by Tianjian Meng on 6/13/17.'
-    print '//  Copyright @ 2017 Pitt. All rights reserved.'
-    print '//  Bug report: tianjian.meng@andrew.cmu.edu'
+def Login():
     zjh=raw_input('Please Input Student ID:')
     mm=raw_input('Please Input Password:')
     cookie_support=urllib2.HTTPCookieProcessor(cookielib.CookieJar())
     opener=urllib2.build_opener(cookie_support)
     urllib2.install_opener(opener)
-    header={
-        'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)',
-        'Connection': 'Keep-Alive'
-    }
-    yzmrequest=urllib2.Request(url='http://121.194.57.131/validateCodeAction.do',headers=header)
+    yzmrequest=urllib2.Request(url='http://121.194.57.131/validateCodeAction.do')
     login=-1
     while (login==-1):
         while True:
@@ -120,124 +113,134 @@ if __name__ == '__main__':
             'v_yzm' : result
         }
         loginform_data=urllib.urlencode(loginform)
-        loginrequest=urllib2.Request('http://121.194.57.131/loginAction.do',loginform_data,headers=header)
+        loginrequest=urllib2.Request('http://121.194.57.131/loginAction.do',loginform_data)
         loginresponse=urllib2.urlopen(loginrequest)
         login=loginresponse.read().find("www.w3.org")
     print 'Successful Login!'
+
+def xxk():
+    kch=raw_input('Please Input Course ID(XXXXXXX):')
+    kxh=raw_input('Please Input Course No(XX):')
+    re=urllib2.Request(url="http://121.194.57.131/ctkcAction.do?actionType=1&xkjd=bxbtx")
+    re2=urllib2.Request(url="http://121.194.57.131/bxXxBtxAction.do?actionType=2")
+    yzmrequest=urllib2.Request(url='http://121.194.57.131/validateCodeAction.do')
+    i=1
+    header={
+        'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)',
+        'Connection': 'Keep-Alive',
+        'Referer': 'http://121.194.57.131/bxXxBtxAction.do?actionType=2'
+        }
+    pick=-1
+    while (pick==-1):
+        while True:
+            content=urllib2.urlopen(yzmrequest).read()
+            img=binary(content)
+            if (len(division(img))==4):
+                result = recognize(img)
+                break
+        pickform={
+            'ifraType': 'bxq',
+            'v_yzm': result,
+            'kcId': kch+'_'+kxh
+        }
+        pickform_data=urllib.urlencode(pickform)
+        pickrequest=urllib2.Request('http://121.194.57.131/bxXxBtxAction.do?actionType=3',pickform_data,headers=header)
+        pickresponse=urllib2.urlopen(pickrequest)
+        pick=pickresponse.read().find("errorSpot")
+        print 'No.'+str(i)+' try'
+        i+=1
+    print 'Done.'
+
+def knj():
+    kch=raw_input('Please Input Course ID(XXXXXXX):')
+    kxh=raw_input('Please Input Course No(XX):')
+    re=urllib2.Request(url="http://121.194.57.131/ctkcAction.do?actionType=1&xkjd=bxbtx")
+    re2=urllib2.Request(url="http://121.194.57.131/bxXxBtxAction.do?actionType=5")
+    yzmrequest=urllib2.Request(url='http://121.194.57.131/validateCodeAction.do')
+    i=1
+    header={
+        'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)',
+        'Connection': 'Keep-Alive',
+        'Referer': 'http://121.194.57.131/bxXxBtxAction.do?actionType=5'
+    }
+    pick=-1
+    while (pick==-1):
+        while True:
+            content=urllib2.urlopen(yzmrequest).read()
+            img=binary(content)
+            if (len(division(img))==4):
+                result = recognize(img)
+                break
+        pickform={
+            'ifraType': 'knj',
+            'v_yzm': result,
+            'jhxn': '',
+            'jhxq': '',
+            'kcId': kch+'_'+kxh
+        }
+        pickform_data=urllib.urlencode(pickform)
+        pickrequest=urllib2.Request('http://121.194.57.131/bxXxBtxAction.do?actionType=3',pickform_data,headers=header)
+        pickresponse=urllib2.urlopen(pickrequest)
+        pick=pickresponse.read().find("errorSpot")
+        print 'No.'+str(i)+' try'
+        i+=1
+    print 'Done.'
+
+def rxk():
+    kch=raw_input('Please Input Course ID(XXXXXXX):')
+    kxh=raw_input('Please Input Course No(XX):')
+    re=urllib2.Request(url="http://121.194.57.131/ctkcAction.do?actionType=1&xkjd=rxbtx")
+    re2=urllib2.Request(url="http://121.194.57.131/rxkAction.do?actionType=2&cxType=kch&pageNumber=-1&&kch=&kxh=&rxklb=&xsyyl=&krlPxfs=desc&kchPxfs=asc")
+    page=0
+    pageresponse=-1
+    while (pageresponse==-1):
+        page+=1
+        re2=urllib2.Request(url="http://121.194.57.131/rxkAction.do?actionType=4&pageNumber="+str(page))
+        res2=urllib2.urlopen(re2)
+        pageresponse=res2.read().find(kch+'\',\''+kxh)
+    yzmrequest=urllib2.Request(url='http://121.194.57.131/validateCodeAction.do')
+    i=1
+    header={
+        'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)',
+        'Connection': 'Keep-Alive',
+        'Referer': 'http://121.194.57.131/rxkAction.do?actionType=4&pageNumber='+str(page)
+    }
+    pick=-1
+    while (pick==-1):
+        while True:
+            content=urllib2.urlopen(yzmrequest).read()
+            img=binary(content)
+            if (len(division(img))==4):
+                result = recognize(img)
+                break
+        pickform={
+            'ifraType': 'wct',
+            'v_yzm': result,
+            'bclx': 'rxk',
+            'krlPxfs': 'asc',
+            'kchPxfs': 'desc',
+            'pageNumber': str(page),
+            'pageNo': '',
+            'kcId': kch+'_'+kxh
+        }
+        pickform_data=urllib.urlencode(pickform)
+        pickrequest=urllib2.Request('http://121.194.57.131/rxkBtxAction.do?actionType=3',pickform_data,headers=header)
+        pickresponse=urllib2.urlopen(pickrequest)
+        pick=pickresponse.read().find("errorSpot")
+        print 'No.'+str(i)+' try'
+        i+=1
+    print 'Done.'
+
+if __name__ == '__main__':
+    print '//  Created by Tianjian Meng on 6/13/17.'
+    print '//  Copyright @ 2017 Pitt. All rights reserved.'
+    print '//  Bug report: tianjian.meng@andrew.cmu.edu'
+    Login()
     while True:
         kctype=raw_input('Please Input Course Type:')
         if (kctype=='1'):
-            kch=raw_input('Please Input Course ID(XXXXXXX):')
-            kxh=raw_input('Please Input Course No(XX):')
-            re=urllib2.Request(url="http://121.194.57.131/ctkcAction.do?actionType=1&xkjd=bxbtx",headers=header)
-            res=urllib2.urlopen(re)
-            re2=urllib2.Request(url="http://121.194.57.131/bxXxBtxAction.do?actionType=2",headers=header)
-            res2=urllib2.urlopen(re2)
-            yzmrequest=urllib2.Request(url='http://121.194.57.131/validateCodeAction.do',headers=header)
-            i=1
-            header={
-                'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)',
-                'Connection': 'Keep-Alive',
-                'Referer': 'http://121.194.57.131/bxXxBtxAction.do?actionType=2'
-                }
-            pick=-1
-            while (pick==-1):
-                while True:
-                    content=urllib2.urlopen(yzmrequest).read()
-                    img=binary(content)
-                    if (len(division(img))==4):
-                        result = recognize(img)
-                        break
-                pickform={
-                    'ifraType': 'bxq',
-                    'v_yzm': result,
-                    'kcId': kch+'_'+kxh
-                }
-                pickform_data=urllib.urlencode(pickform)
-                pickrequest=urllib2.Request('http://121.194.57.131/bxXxBtxAction.do?actionType=3',pickform_data,headers=header)
-                pickresponse=urllib2.urlopen(pickrequest)
-                pick=pickresponse.read().find("errorSpot")
-                print 'No.'+str(i)+' try'
-                i+=1
-            print 'Done.'
+            xxk()
         if (kctype=='2'):
-            kch=raw_input('Please Input Course ID(XXXXXXX):')
-            kxh=raw_input('Please Input Course No(XX):')
-            re=urllib2.Request(url="http://121.194.57.131/ctkcAction.do?actionType=1&xkjd=bxbtx",headers=header)
-            res=urllib2.urlopen(re)
-            re2=urllib2.Request(url="http://121.194.57.131/bxXxBtxAction.do?actionType=5",headers=header)
-            res2=urllib2.urlopen(re2)
-            yzmrequest=urllib2.Request(url='http://121.194.57.131/validateCodeAction.do',headers=header)
-            i=1
-            header={
-                'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)',
-                'Connection': 'Keep-Alive',
-                'Referer': 'http://121.194.57.131/bxXxBtxAction.do?actionType=5'
-            }
-            pick=-1
-            while (pick==-1):
-                while True:
-                    content=urllib2.urlopen(yzmrequest).read()
-                    img=binary(content)
-                    if (len(division(img))==4):
-                        result = recognize(img)
-                        break
-                pickform={
-                    'ifraType': 'knj',
-                    'v_yzm': result,
-                    'jhxn': '',
-                    'jhxq': '',
-                    'kcId': kch+'_'+kxh
-                }
-                pickform_data=urllib.urlencode(pickform)
-                pickrequest=urllib2.Request('http://121.194.57.131/bxXxBtxAction.do?actionType=3',pickform_data,headers=header)
-                pickresponse=urllib2.urlopen(pickrequest)
-                pick=pickresponse.read().find("errorSpot")
-                print 'No.'+str(i)+' try'
-                i+=1
-            print 'Done.'
+            knj()
         if (kctype=='3'):
-            kch=raw_input('Please Input Course ID(XXXXXXX):')
-            kxh=raw_input('Please Input Course No(XX):')
-            re=urllib2.Request(url="http://121.194.57.131/ctkcAction.do?actionType=1&xkjd=rxbtx",headers=header)
-            res=urllib2.urlopen(re)
-            re2=urllib2.Request(url="http://121.194.57.131/rxkAction.do?actionType=2&cxType=kch&pageNumber=-1&&kch=&kxh=&rxklb=&xsyyl=&krlPxfs=desc&kchPxfs=asc",headers=header)
-            page=0
-            pageresponse=-1
-            while (pageresponse==-1):
-                page+=1
-                re2=urllib2.Request(url="http://121.194.57.131/rxkAction.do?actionType=4&pageNumber="+str(page),headers=header)
-                res2=urllib2.urlopen(re2)
-                pageresponse=res2.read().find(kch+'\',\''+kxh)
-            yzmrequest=urllib2.Request(url='http://121.194.57.131/validateCodeAction.do',headers=header)
-            i=1
-            header={
-                'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)',
-                'Connection': 'Keep-Alive',
-                'Referer': 'http://121.194.57.131/rxkAction.do?actionType=4&pageNumber='+str(page)
-            }
-            pick=-1
-            while (pick==-1):
-                while True:
-                    content=urllib2.urlopen(yzmrequest).read()
-                    img=binary(content)
-                    if (len(division(img))==4):
-                        result = recognize(img)
-                        break
-                pickform={
-                    'ifraType': 'wct',
-                    'v_yzm': result,
-                    'bclx': 'rxk',
-                    'krlPxfs': 'asc',
-                    'kchPxfs': 'desc',
-                    'pageNumber': str(page),
-                    'pageNo': '',
-                    'kcId': kch+'_'+kxh
-                }
-                pickform_data=urllib.urlencode(pickform)
-                pickrequest=urllib2.Request('http://121.194.57.131/rxkBtxAction.do?actionType=3',pickform_data,headers=header)
-                pickresponse=urllib2.urlopen(pickrequest)
-                pick=pickresponse.read().find("errorSpot")
-                print 'No.'+str(i)+' try'
-                i+=1
-            print 'Done.'
+            rxk()
